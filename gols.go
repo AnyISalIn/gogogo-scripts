@@ -28,8 +28,21 @@ func getFileInfo(file os.FileInfo) (map[string]interface{}) {
 	return m
 }
 
+func getDirList(files []os.FileInfo) []os.FileInfo {
+	results := []os.FileInfo{}
+	for _, file := range files {
+		if file.IsDir() {
+			results = append(results, file)
+		}
+	}
+	return results
+}
+
 func filter(files []os.FileInfo, c *cli.Context) []os.FileInfo {
 	results := []os.FileInfo{}
+	if c.Bool("dir") {
+		files = getDirList(files)
+	}
 	if c.Bool("all") {
 		return files
 	}
@@ -70,6 +83,10 @@ func main() {
 		cli.BoolFlag{
 			Name: "a, all",
 			Usage: "list all file",
+		},
+		cli.BoolFlag{
+			Name: "d, dir",
+			Usage: "list dir",
 		},
 	}
 	app.Action = func(c *cli.Context) error {
