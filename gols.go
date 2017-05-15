@@ -1,20 +1,20 @@
 package main
 
 import (
+	"fmt"
+	"github.com/urfave/cli"
 	"io/ioutil"
 	"os"
-	"syscall"
 	"strings"
-	"github.com/urfave/cli"
-	"fmt"
+	"syscall"
 )
 
-func getFileList(dir string) ([]os.FileInfo) {
+func getFileList(dir string) []os.FileInfo {
 	files, _ := ioutil.ReadDir(dir)
 	return files
 }
 
-func getFileInfo(file os.FileInfo) (map[string]interface{}) {
+func getFileInfo(file os.FileInfo) map[string]interface{} {
 	s, ok := file.Sys().(*syscall.Stat_t)
 	m := map[string]interface{}{
 		"name": file.Name(),
@@ -47,7 +47,7 @@ func filter(files []os.FileInfo, c *cli.Context) []os.FileInfo {
 		return files
 	}
 	for _, file := range files {
-		if ! strings.HasPrefix(file.Name(), ".") {
+		if !strings.HasPrefix(file.Name(), ".") {
 			results = append(results, file)
 		}
 	}
@@ -77,15 +77,15 @@ func main() {
 	app.Name = "gols"
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
-			Name: "l, list",
+			Name:  "l, list",
 			Usage: "list format",
 		},
 		cli.BoolFlag{
-			Name: "a, all",
+			Name:  "a, all",
 			Usage: "list all file",
 		},
 		cli.BoolFlag{
-			Name: "d, dir",
+			Name:  "d, dir",
 			Usage: "list dir",
 		},
 	}
